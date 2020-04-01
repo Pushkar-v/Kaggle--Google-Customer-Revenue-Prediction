@@ -35,6 +35,10 @@ targeted and also, Store planning can be accordingly done for better customer ex
 
 ### Data Exploration
 
+![Data](Images/dataset.png)
+
+
+
 We are provided with 2 datasets, train and test with following sizes.
 **train.csv - 24 GB**
 **test.csv - 7 GB**
@@ -113,6 +117,8 @@ After dropping consistent and unrelated features, we narrowed down the number of
 
 ### Data Preparation - Rolling Window
 
+![Rolling](Images/rolling.png)
+
 As we needed to predict the revenue of customers in 5.5 months(provided in test data), we took 5.5 months of instances for each customers at different points of time. We were able to get three groups of time period to consider (August’16 - January’17), (February’17 - July’17), (August’17 - January’18). This approach gave us 1,052,414 number of rows, out of which 3,531 were with transactions. It was 0.34% of the total data. This showed us that the data was highly imbalanced and there were very few customers with transactions. To tackle this situation, we took a rolling window of 5.5 months.
 
 
@@ -144,6 +150,10 @@ While using this data set we faced a few challenges. The first and foremost was 
 
 
 ## Analysis
+
+![approach](Images/approach.png)
+
+
 
 ### Model Evaluation
 
@@ -180,6 +190,8 @@ Meanwhile, ADABoost is a little overfitting with good performance in training da
 | Random Forest | 1.167        | 1.376      |
 
 ### Stacking Models
+
+![stacking](Images/stacking.png)
 
 Stacking is a way to ensemble multiple classification or regression models, to integrate the strength of decent models and make full use of them towards different parts of data. As the performance table shows before, one algorithm may not be enough to return pretty accurate and stable prediction results, and so we choose the top 3 models XGBoost, AdaBoost and Random Forest to try stacking and take the average RMSE from them.
 
