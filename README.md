@@ -123,21 +123,21 @@ As we needed to predict the revenue of customers in 5.5 months(provided in test 
 
 
 
-| From         | To     |
-| ------------ | ------ |
-| August 16    | Jan17  |
-| September 16 | Feb 17 |
-| October16    | Mar 17 |
-| November 16  | Apr 17 |
-| Dec 16       | May 17 |
-| Jan17        | Jun 17 |
-| Feb 17       | Jul 17 |
-| Mar 17       | Aug 17 |
-| Apr 17       | Sep 17 |
-| May 17       | Oct 17 |
-| Jun 17       | Nov 17 |
-| Jul 17       | Dec 17 |
-| Aug 17       | Jan 18 |
+| From   | To     |
+| ------ | ------ |
+| Aug 16 | Jan17  |
+| Sep 16 | Feb 17 |
+| Oct16  | Mar 17 |
+| Nov 16 | Apr 17 |
+| Dec 16 | May 17 |
+| Jan17  | Jun 17 |
+| Feb 17 | Jul 17 |
+| Mar 17 | Aug 17 |
+| Apr 17 | Sep 17 |
+| May 17 | Oct 17 |
+| Jun 17 | Nov 17 |
+| Jul 17 | Dec 17 |
+| Aug 17 | Jan 18 |
 
 This gave us 13 sets of datasets. Now we get 4,377,621 rows, out of which 16,409 were with transactions. After increasing no of instances with revenue, the data was too large to handle and run predictive models on to get results. So we under sampled the transactions without revenue. This helped us to get the data at a manageable level without losing any information on the instances with transactions. After under sampling we get 3.7% of customers with transactions.
 
