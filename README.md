@@ -200,9 +200,9 @@ From this, we could clearly see that the stacking model is not better than all t
 All in all, we choose XGBoost for both classification and regression problem
 
 
-## Business Insights
+## Findings and Insights
 
-We trained the XGboost model on all players who we predict will make a purchase. We
+We trained the XGBoost model on all players who we predict will make a purchase. We
 generate a graph that represents the prediction power of all variables (35 of them) to how much these customers will spend. Below is the screenshot of top features:
 
 ![Feature Importances](Images/Features.png)
