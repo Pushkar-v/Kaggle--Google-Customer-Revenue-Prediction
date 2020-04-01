@@ -1,5 +1,7 @@
 # Kaggle: Google Customer Revenue Prediction
 
+[Kaggle Link]: www.kaggle.com/c/ga-customer-revenue-prediction
+
 ## Project Definition & Introduction
 
 ### Background & Context
