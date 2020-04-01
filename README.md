@@ -140,3 +140,63 @@ This gave us 13 sets of datasets. Now we get 4,377,621 rows, out of which 16,409
 ### Challenges Faced
 
 While using this data set we faced a few challenges. The first and foremost was dealing with the huge amount of data (31 GB). We used Google’s cloud services like Big Query, their high configuration instances and Storage. Secondly, the data was on transaction level, but we needed to provide customer level revenue, so we grouped the data into customer level. We figured that there are very few instances of transactions. For that, we used rolling period of transactions, this increased our instances with transactions. This method gave us a vast amount of data which we could not handle to run predictive algorithms on. We under sampled our non transactional instances.
+
+
+
+## Analysis
+
+### Model Evaluation
+
+We Evaluate classification models on total recall score of the model. Since our data is highly imbalances, this is necessary to capture the maximum number of purchase instances as possible. For the regression problem, we use root mean squared error as the performance measure as this is a requirement for the competition.
+
+### Exploring different Algorithms 
+
+For algorithm selection, we break down the google prediction problem into two main issues based on the customers’ purchase status. One is the classification problem that whether the customers buy or not, and the other is the regression problem to predict the total revenue for those who are predicted to buy.
+
+For the binary classification problem, we predict it with several mature algorithms, including XGBoost, Random Forest, Support Vector Classification and Logistic Regression. For each one, we use grid search to find the best parameters for the maximum accuracy
+
+These algorithms give us a good performance on identifying customers’ purchase situations, whether they buy or not. From the results below, the accuracy of XGBoost Classification reaches up to 98.44%, which is the best among the four models. Besides, the reason why we choose XGBoost because it has built-in regularization, handles missing values well, and even tells us the importance of various features.
+
+| Model               | Accuracy   | Recall     |
+| ------------------- | ---------- | ---------- |
+| XGBoost             | **99.41%** | **98.50%** |
+| Random Forest       | 99.21%     | 94.58%     |
+| SVM                 | 99.30%     | 95.23%     |
+| Logistic Regression | 99.37%     | 93.71%     |
+
+After classifying, we get a new column with the predicted values of Based on the new column, 0 or 1, we try a series of models for the regression problem, including Random Forest, SVR, ADABoost and XGBoost, to find the best models for stacking. So we import the following helpful packages from scikit-learn.
+
+For each individual model, we set up various parameters and find the best versions of
+regression models for parameter tuning using grid search in the Jupyter Lab.
+
+Then we do the model evaluation with the metric Root Mean Square Error (RMSE), which shows that XGBoost Regressor fits the data best, and Random Forest and SVR follow it.
+
+Meanwhile, ADABoost is a little overfitting with good performance in training dataset but works poorly in the testing dataset. Besides, we also tried Linear Regression and Linear Regression, which returned high RMSE and so they will not be involved into deeper discussion here.
+
+| Model         | RMSE (Train) | RMSE(Test) |
+| ------------- | ------------ | ---------- |
+| ADABoost      | 1.326        | 1.370      |
+| XGBoost       | **1.1115**   | **1.321**  |
+| Random Forest | 1.167        | 1.376      |
+
+### Stacking Models
+
+Stacking is a way to ensemble multiple classification or regression models, to integrate the strength of decent models and make full use of them towards different parts of data. As the performance table shows before, one algorithm may not be enough to return pretty accurate and stable prediction results, and so we choose the top 3 models XGBoost, AdaBoost and Random Forest to try stacking and take the average RMSE from them.
+
+From this, we could clearly see that the stacking model is not better than all the individual models, and has a higher RMSE than XGBoost, partly because the ADABoost and Random Forest are not decent enough and increase the total average RMSE. Therefore, we choose the XGBoost as the final model for regression and use it to predict the total revenue for customers.
+
+All in all, we choose XGBoost for both classification and regression problem
+
+
+## Business Insights
+
+We trained the XGboost model on all players who we predict will make a purchase. We
+generate a graph that represents the prediction power of all variables (35 of them) to how much these customers will spend. Below is the screenshot of top features:
+
+![Feature Importances](Images/Features.png)
+
+According to the figure above, the top 4 important features are total hits, page views, time on site and new visitors. Hits and page views indicate how many hits and pages the buyer clicks or visits before a purchase, and we found out these customers on average clicks 34 times and visits 24 pages. These high-value operations may indicate that customers browse through websites and compare different products before making the purchase. However, it is also possible that the design of the website is not efficient enough so that customers need to visit more pages before finding their desired product and filling their purchase information. Hence, to enhance a better customer experience, we advise the website owner to check the structure of the website to see if there are any unnecessary websites.
+
+Next, time spent, how much time the customers spend in browsing web pages, and the model shows that the potential customers will spend at least 20 minutes. The fourth attribute New Visitors indicates that whether the customer will make a purchase on their first visit. These customers could potentially have higher values to the store since they directly make purchase on their first visit. After these customers appear, the website can target them by providing them with promotions to increase their visit times.
+
+In general, these models not only help to predict the total revenue on customer level but also reveals information about what metrics should the business owner pay attention to. By detecting these key features, we could generate information about customer behaviors and their willingness to make purchases in time. Then, the business owner could adopt a series of strategies to increase web traffic or conversion rate, including sending proper advertisement, giving relevant coupons and so on.
