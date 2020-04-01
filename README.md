@@ -41,18 +41,19 @@ We are provided with 2 datasets, train and test with following sizes.
 The prediction variable is the logarithmic revenue of the store visit, which is required at a customer level. Each row in the data represents a visit by a customer, and there are various attributes captures by google analytics for one visit.
 
 The data fields in the given files with their data understanding are as below:
-● **fullVisitorId**- Unique Customer ID
-● **channelGrouping** - How User visited the store
-● **date** - The date on which the user visited the Store.
-● **device** - Details on how user accessed the website
-● **geoNetwork** - User Geographic details demographics data
-● **sessionId** - Unique ID for the session of the user
-● **socialEngagementType** - "Socially Engaged" / "Not Socially Engaged".
-● **totals** - These contains various session attributes
-● **trafficSource** - Traffic Source of the section
-● **visitId** - An identifier for this visit
-● **visitNumber** - The session number for this user. If this is the first visit, then this is set to 1.
-● **visitStartTime** - The timestamp for the visit
+
+1. **fullVisitorId**- Unique Customer ID
+2. **channelGrouping** - How User visited the store
+3. **date** - The date on which the user visited the Store.
+4. **device** - Details on how user accessed the website
+5. **geoNetwork** - User Geographic details demographics data
+6. **sessionId** - Unique ID for the session of the user
+7.  **socialEngagementType** - "Socially Engaged" / "Not Socially Engaged".
+8. **totals** - These contains various session attributes
+9. **trafficSource** - Traffic Source of the section
+10. **visitId** - An identifier for this visit
+11. **visitNumber** - The session number for this user. If this is the first visit, then this is set to 1.
+12. **visitStartTime** - The timestamp for the visit
 
 The train data ranges from 1st August 2016 to 30th April 2018. And the test data is for 5.5 months ranging from 1st May 2019 to 15th October 2019.
 
@@ -62,17 +63,16 @@ Many data fields are also in Json format which first needs to be unpacked and fl
 
 ### Data Cleaning
 
-The imported data had following files in Json format. We use the following function to flatten these files and convert them into required columns.
+The imported data had following files in JSON format. We use the following function to flatten these files and convert them into required columns.
 
 ```python
 JSON_COLUMNS = ['device', 'geoNetwork', 'totals', 'trafficSource']
 for column in JSON_COLUMNS:
-5
-column_as_df = json_normalize(df1[column])
-column_as_df.columns = [f"{column}.{subcolumn}" for subcolumn in
-column_as_df.columns]
-df1 = df1.drop(column, axis=1).merge(column_as_df, right_index=True,
-left_index=True, how = 'left')
+    column_as_df = json_normalize(df1[column])
+    column_as_df.columns = [f"{column}.{subcolumn}" for subcolumn in
+    column_as_df.columns]
+    df1 = df1.drop(column, axis=1).merge(column_as_df, right_index=True,
+    left_index=True, how = 'left')
 ```
 
 These expanded fields give multiple columns which have no values in them and are zero. We neglect these columns and go ahead with columns which have further values in them for feature selection.
