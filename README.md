@@ -76,3 +76,67 @@ for column in JSON_COLUMNS:
 ```
 
 These expanded fields give multiple columns which have no values in them and are zero. We neglect these columns and go ahead with columns which have further values in them for feature selection.
+
+
+
+### Data Transformation
+
+The data contains the fields at a visit level, and required prediction is at a customer level. We group the fields at a customer level to get the required aggregation. We group all numeric features at a customer level for the final dataset creation and encode all categorical variables into one-hot encoding.
+
+For the categorical variables, we do not use all the available categories but only the ones which make sense. We select top 5 categories in each of the fields by frequency and club all other categories as ‘others’ to keep the dimensionality of the dataset small.
+
+
+
+### Feature Selection
+
+We select features from the data for analysis. Not all features are useful, and not all features have consistent values. We select the following features as per business understanding. 
+
+We group the features into 4 distinct categories.
+
+1. Web Traffic Data : Organic Search, Channel
+
+2. Session Data : Hits, Visits, PageViews, Time spent on site, clicks
+
+3. User Experience : Session Quality, Exits, Bounces, Hits, Bounces etc.
+
+4. User Demographics : Geography, Time of the Day, Device, Browser etc.
+
+
+
+After flattening nested JSON structures of the data, we generate 113 individual features in total. These data fields include channels via which the user came to the store, devices used to access the store, number of hits, page visits, time spent during each customer visit to the store and so on. The comprehensive data introduction can be found under Kaggle competition’s webpage: https://www.kaggle.com/c/ga-customer-revenue-prediction/data .
+
+For evaluating which features to include, we explored values in each data column and made selection based on the predictive power of the features. For example, visitorID is a unique identifier for distinctions among customers, but it does not preserve any predictive power over the revenue a customer will spend. Similarly, the longitude and latitude of the geographic location during the visit is useful for data visualizations, but it does not add additional information for revenue prediction (since the city, the country are also presented in data fields). In addition, we discovered that there are 19 features that have constant values in the train set, so we decided to drop these features as they do not bring useful information and will slow down the modeling process.
+
+After dropping consistent and unrelated features, we narrowed down the number of predictors to. A complete variables that we include in the model can be found in figure 1 in the appendix.
+
+
+
+### Data Preparation - Rolling Window
+
+As we needed to predict the revenue of customers in 5.5 months(provided in test data), we took 5.5 months of instances for each customers at different points of time. We were able to get three groups of time period to consider (August’16 - January’17), (February’17 - July’17), (August’17 - January’18). This approach gave us 1,052,414 number of rows, out of which 3,531 were with transactions. It was 0.34% of the total data. This showed us that the data was highly imbalanced and there were very few customers with transactions. To tackle this situation, we took a rolling window of 5.5 months.
+
+
+
+| From         | To     |
+| ------------ | ------ |
+| August 16    | Jan17  |
+| September 16 | Feb 17 |
+| October16    | Mar 17 |
+| November 16  | Apr 17 |
+| Dec 16       | May 17 |
+| Jan17        | Jun 17 |
+| Feb 17       | Jul 17 |
+| Mar 17       | Aug 17 |
+| Apr 17       | Sep 17 |
+| May 17       | Oct 17 |
+| Jun 17       | Nov 17 |
+| Jul 17       | Dec 17 |
+| Aug 17       | Jan 18 |
+
+This gave us 13 sets of datasets. Now we get 4,377,621 rows, out of which 16,409 were with transactions. After increasing no of instances with revenue, the data was too large to handle and run predictive models on to get results. So we under sampled the transactions without revenue. This helped us to get the data at a manageable level without losing any information on the instances with transactions. After under sampling we get 3.7% of customers with transactions.
+
+
+
+### Challenges Faced
+
+While using this data set we faced a few challenges. The first and foremost was dealing with the huge amount of data (31 GB). We used Google’s cloud services like Big Query, their high configuration instances and Storage. Secondly, the data was on transaction level, but we needed to provide customer level revenue, so we grouped the data into customer level. We figured that there are very few instances of transactions. For that, we used rolling period of transactions, this increased our instances with transactions. This method gave us a vast amount of data which we could not handle to run predictive algorithms on. We under sampled our non transactional instances.
